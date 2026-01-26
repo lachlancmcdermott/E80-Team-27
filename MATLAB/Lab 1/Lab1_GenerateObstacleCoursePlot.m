@@ -4,7 +4,6 @@ clc;
 %!!! REPLACE WITH CORRECT TEST NUMBERS !!!
 test = dataLog('004');
 
-%% Process your data here
 %Generate acceleration plot for underwater course
 figure('Name', 'ROV Acceleration Plot');
 plot(test.accelX, 'red', 'LineWidth', 1); 
