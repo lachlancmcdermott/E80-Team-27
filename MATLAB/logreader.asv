@@ -1,7 +1,7 @@
-function logData = dataLog(n)
+function logData = readLog(n)
 
-    infofile = strcat('INF', n, '.TXT');
-    datafile = strcat('LOG', n, '.BIN');
+    infofile = strcat('INF', filenum, '.TXT');
+    datafile = strcat('LOG', filenum, '.BIN');
     
     if ~isfile(infofile) || ~isfile(datafile)
         error('File %s or %s not found.', infofile, datafile);
@@ -26,8 +26,8 @@ function logData = dataLog(n)
     varTypes = items{1}(ncols+1:end)';
     varLengths = zeros(size(varTypes));
     
+    % IMPORTANT: Verify if your logger uses 256 fixed length or dynamic
     colLength = 256; 
-
     
     for i = 1:numel(varTypes)
         if isfield(dataSizes, varTypes{i})
@@ -38,13 +38,22 @@ function logData = dataLog(n)
         end
     end
 
+    %% 4. Read Binary Data
     fid = fopen(datafile,'rb');
     
+    % Initialize output structure
     logData = struct();
     
     for i=1:numel(varTypes)
+        % Seek to the start of the specific column
         fseek(fid, sum(varLengths(1:i-1)), 'bof');
+        
+        % Read column with skip (colLength - varLength)
+        % This effectively grabs the i-th variable from every row
         dataCol = fread(fid, Inf, ['*' varTypes{i}], colLength-varLengths(i));
+        
+        % Store in the structure using dynamic field names
+        % This replaces the 'eval' statement
         logData.(varNames{i}) = dataCol;
     end
     

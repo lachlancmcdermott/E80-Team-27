@@ -10,7 +10,7 @@ figure('Name', 'ROV Acceleration Plot');
 plot(test.accelX, 'red', 'LineWidth', 1); 
 hold on;
 plot(test.accelY, 'green', 'LineWidth', 1);
-plot(test.accelZ, 'blue', 'LineWidth', 1);
+plot(est.accelX, 'blue', 'LineWidth', 1);
 
 %FOR DATA TRIMMING
 axis([0 63 -400 1400])
