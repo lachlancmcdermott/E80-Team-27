@@ -4,7 +4,7 @@
 clear;
 %clf;
 
-filenum = '003'; % file number for the data you want to read
+filenum = '004'; % file number for the data you want to read
 infofile = strcat('INF', filenum, '.TXT');
 datafile = strcat('LOG', filenum, '.BIN');
 
@@ -46,6 +46,80 @@ end
 fclose(fid);
 
 %% Process your data here
+%Conversion to units
 
+%Accelerometer conversion
+convertedAccelZ = accelZ / 9.8;
 
+%NEED CONVERSION FACTOR
 
+%Acceleration plot calculations
+confLev = 0.95;
+xbar = mean(convertedAccelZ); %Arthimatic mean
+S = std(convertedAccelZ); %Standard deviation
+N = length(convertedAccelZ); %Dataset sample count
+ESE = S/sqrt(N); %Estimated standard error
+StdT = tinv( (1-0.5*(1-confLev)), N-1); %Student error
+lambda = StdT*ESE; %1/2 of the confidence interval
+
+disp('Arthimatic mean');
+disp(xbar)
+disp('Standard deviation');
+disp(S)
+disp('Estimated standard error');
+disp(ESE)
+disp('Confidence interval bounds');
+disp(lambda)
+
+%Generate acceleration plots for acclerometer calibration 
+figure('Name', 'Zero X');
+hold on;
+
+figure('Name', 'Zero X');
+plot(accelX, 'red', 'LineWidth', 1); 
+hold on;
+title('Zero X');
+xlabel('Time [samples]');
+ylabel('Acceleration [m/s^2]');
+grid on;
+
+subplot(2, 2, 2);
+plot(accelY, 'green', 'LineWidth', 1); 
+title('Zero Y');
+xlabel('Time [samples]');
+ylabel('Acceleration [m/s^2]');
+grid on;
+
+subplot(2, 2, 3);
+plot(accelZ, 'blue', 'LineWidth', 1); 
+title('Zero Z');
+xlabel('Time [samples]');
+ylabel('Acceleration [m/s^2]');
+grid on;
+
+subplot(2, 2, 4);
+plot(accelZ, 'blue', 'LineWidth', 1); 
+title('Accelerated Z');
+xlabel('Time [samples]');
+ylabel('Acceleration [m/s^2]');
+grid on;
+
+hold off;
+
+%Generate acceleration plot for underwater course
+figure('Name', 'ROV Acceleration Plot');
+plot(accelX, 'red', 'LineWidth', 1); 
+hold on;
+plot(accelY, 'green', 'LineWidth', 1);
+plot(accelZ, 'blue', 'LineWidth', 1);
+
+%FOR DATA TRIMMING
+axis([0 63 -400 1400])
+
+xlabel('Time [samples]')
+ylabel('Acceleration [m/s^2]')
+title('Measured ROV Acceleration in Obstacle Course')
+legend('x Acceleration', 'y Acceleration', 'z Acceleration');
+    
+grid on
+hold off
