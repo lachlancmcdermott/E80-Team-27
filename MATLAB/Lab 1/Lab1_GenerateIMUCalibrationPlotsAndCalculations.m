@@ -6,8 +6,9 @@ trial1 = dataLog('005'); % Z axis accelerating trial
 trial2 = dataLog('005'); % X axis accelerating trial
 trial3 = dataLog('005'); % Y axis accelerating trial
 
-%Calculations and mean values
 confLev = 0.95;
+
+%Calculations and mean values
 xbar = mean(trial1.accelZ); %Arthimatic mean
 S = std(trial1.accelZ); %Standard deviation
 N = length(trial1.accelZ); %Dataset sample count
@@ -56,8 +57,7 @@ fprintf('Z Zero mean: %.4f ± %.4f (95%% confidence)\n', xbar, lambda)
 fprintf('Std. deviation: %.4f\n', S);
 fprintf('Std. error: %.4f\n', ESE);
 fprintf(' \n');
-
-
+    
 %GENERATE PLOTS
 % X trial 1
 figure('Name', 'Zero X', 'NumberTitle', 'off');
