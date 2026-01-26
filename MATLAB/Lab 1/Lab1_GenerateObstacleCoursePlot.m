@@ -1,23 +1,33 @@
 clear; 
 clc;
 
-%!!! REPLACE WITH CORRECT TEST NUMBERS !!!
-test = dataLog('004');
+%!!! REPLACE WITH CORRECT TRIAL FILE NUMBERS DURING LAB !!!
+test = dataLog('005');
 
-%Generate acceleration plot for underwater course
+%convert from teeensy to m/s^2
+%subtract off the arithmatic mean after we do conversion
+
+%Generate acceleration plots
 figure('Name', 'ROV Acceleration Plot');
-plot(test.accelX, 'red', 'LineWidth', 1); 
-hold on;
+
+subplot(3,1,1);
+plot(test.accelX, 'red', 'LineWidth', 1);
+title('X Acceleration');
+ylabel('Accel [m/s^2]');
+axis tight;
+grid on;
+
+subplot(3,1,2);
 plot(test.accelY, 'green', 'LineWidth', 1);
+title('Y Acceleration');
+ylabel('Accel [m/s^2]');
+axis tight;
+grid on;
+
+subplot(3,1,3);
 plot(test.accelZ, 'blue', 'LineWidth', 1);
-
-%FOR DATA TRIMMING
-axis([0 63 -400 1400])
-
-xlabel('Time [samples]')
-ylabel('Acceleration [m/s^2]')
-title('Measured ROV Acceleration in Obstacle Course')
-legend('x Acceleration', 'y Acceleration', 'z Acceleration');
-    
-grid on
-hold off
+title('Z Acceleration');
+ylabel('Accel [m/s^2]');
+xlabel('Time [samples]');
+axis tight;
+grid on;
