@@ -1,125 +1,61 @@
-% logreader.m
-% Use this script to read data from your micro SD card
+function logData = readLog(filenum)
 
-clear;
-%clf;
+    if isnumeric(filenum)
+        filenum = sprintf('%03d', filenum);
+    end
 
-filenum = '004'; % file number for the data you want to read
-infofile = strcat('INF', filenum, '.TXT');
-datafile = strcat('LOG', filenum, '.BIN');
-
-%% map from datatype to length in bytes
-dataSizes.('float') = 4;
-dataSizes.('ulong') = 4;
-dataSizes.('int') = 4;
-dataSizes.('int32') = 4;
-dataSizes.('uint8') = 1;
-dataSizes.('uint16') = 2;
-dataSizes.('char') = 1;
-dataSizes.('bool') = 1;
-
-%% read from info file to get log file structure
-fileID = fopen(infofile);
-items = textscan(fileID,'%s','Delimiter',',','EndOfLine','\r\n');
-fclose(fileID);
-[ncols,~] = size(items{1});
-ncols = ncols/2;
-varNames = items{1}(1:ncols)';
-varTypes = items{1}(ncols+1:end)';
-varLengths = zeros(size(varTypes));
-colLength = 256;
-for i = 1:numel(varTypes)
-    varLengths(i) = dataSizes.(varTypes{i});
-end
-R = cell(1,numel(varNames));
-
-%% read column-by-column from datafile
-fid = fopen(datafile,'rb');
-for i=1:numel(varTypes)
-    %# seek to the first field of the first record
-    fseek(fid, sum(varLengths(1:i-1)), 'bof');
+    infofile = strcat('INF', filenum, '.TXT');
+    datafile = strcat('LOG', filenum, '.BIN');
     
-    %# % read column with specified format, skipping required number of bytes
-    R{i} = fread(fid, Inf, ['*' varTypes{i}], colLength-varLengths(i));
-    eval(strcat(varNames{i},'=','R{',num2str(i),'};'));
-end
-fclose(fid);
+    if ~isfile(infofile) || ~isfile(datafile)
+        error('File %s or %s not found.', infofile, datafile);
+    end
 
-%% Process your data here
-%Conversion to units
+    dataSizes.('float') = 4;
+    dataSizes.('ulong') = 4;
+    dataSizes.('int') = 4;
+    dataSizes.('int32') = 4;
+    dataSizes.('uint8') = 1;
+    dataSizes.('uint16') = 2;
+    dataSizes.('char') = 1;
+    dataSizes.('bool') = 1;
 
-%Accelerometer conversion
-convertedAccelZ = accelZ / 9.8;
-
-%NEED CONVERSION FACTOR
-
-%Acceleration plot calculations
-confLev = 0.95;
-xbar = mean(convertedAccelZ); %Arthimatic mean
-S = std(convertedAccelZ); %Standard deviation
-N = length(convertedAccelZ); %Dataset sample count
-ESE = S/sqrt(N); %Estimated standard error
-StdT = tinv( (1-0.5*(1-confLev)), N-1); %Student error
-lambda = StdT*ESE; %1/2 of the confidence interval
-
-disp('Arthimatic mean');
-disp(xbar)
-disp('Standard deviation');
-disp(S)
-disp('Estimated standard error');
-disp(ESE)
-disp('Confidence interval bounds');
-disp(lambda)
-
-%Generate acceleration plots for acclerometer calibration 
-figure('Name', 'Zero X');
-hold on;
-
-figure('Name', 'Zero X');
-plot(accelX, 'red', 'LineWidth', 1); 
-hold on;
-title('Zero X');
-xlabel('Time [samples]');
-ylabel('Acceleration [m/s^2]');
-grid on;
-
-subplot(2, 2, 2);
-plot(accelY, 'green', 'LineWidth', 1); 
-title('Zero Y');
-xlabel('Time [samples]');
-ylabel('Acceleration [m/s^2]');
-grid on;
-
-subplot(2, 2, 3);
-plot(accelZ, 'blue', 'LineWidth', 1); 
-title('Zero Z');
-xlabel('Time [samples]');
-ylabel('Acceleration [m/s^2]');
-grid on;
-
-subplot(2, 2, 4);
-plot(accelZ, 'blue', 'LineWidth', 1); 
-title('Accelerated Z');
-xlabel('Time [samples]');
-ylabel('Acceleration [m/s^2]');
-grid on;
-
-hold off;
-
-%Generate acceleration plot for underwater course
-figure('Name', 'ROV Acceleration Plot');
-plot(accelX, 'red', 'LineWidth', 1); 
-hold on;
-plot(accelY, 'green', 'LineWidth', 1);
-plot(accelZ, 'blue', 'LineWidth', 1);
-
-%FOR DATA TRIMMING
-axis([0 63 -400 1400])
-
-xlabel('Time [samples]')
-ylabel('Acceleration [m/s^2]')
-title('Measured ROV Acceleration in Obstacle Course')
-legend('x Acceleration', 'y Acceleration', 'z Acceleration');
+    fileID = fopen(infofile);
+    items = textscan(fileID,'%s','Delimiter',',','EndOfLine','\r\n');
+    fclose(fileID);
     
-grid on
-hold off
+    [ncols,~] = size(items{1});
+    ncols = ncols/2;
+    varNames = items{1}(1:ncols)';
+    varTypes = items{1}(ncols+1:end)';
+    varLengths = zeros(size(varTypes));
+    
+    colLength = 256; 
+    
+    for i = 1:numel(varTypes)
+        if isfield(dataSizes, varTypes{i})
+            varLengths(i) = dataSizes.(varTypes{i});
+        else
+            warning('Unknown data type: %s', varTypes{i});
+            varLengths(i) = 0;
+        end
+    end
+
+    fid = fopen(datafile,'rb');
+    logData = struct();
+    
+    for i=1:numel(varTypes)
+        % Seek to the start of the specific column
+        fseek(fid, sum(varLengths(1:i-1)), 'bof');
+        
+        % Read column with skip (colLength - varLength)
+        % This effectively grabs the i-th variable from every row
+        dataCol = fread(fid, Inf, ['*' varTypes{i}], colLength-varLengths(i));
+        
+        % Store in the structure using dynamic field names
+        % This replaces the 'eval' statement
+        logData.(varNames{i}) = dataCol;
+    end
+    
+    fclose(fid);
+end
