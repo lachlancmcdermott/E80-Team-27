@@ -67,17 +67,58 @@ void loop() {
 
   int currentTime = millis() - loopStartTime;
   
-  ///////////  Don't change code above here! ////////////////////
+  //////////  Don't change code above here! ////////////////////
   // write code here to make the robot fire its motors in the sequence specified in the lab manual 
   // the currentTime variable contains the number of ms since the robot was turned on 
   // The motorDriver.drive function takes in 3 inputs arguments motorA_power, motorB_power, motorC_power: 
   //       void motorDriver.drive(int motorA_power,int motorB_power,int motorC_power); 
   // the value of motorX_power can range from -255 to 255, and sets the PWM applied to the motor 
   // The following example will turn on motor B for four seconds between seconds 4 and 8 
-  if (currentTime > 4000 && currentTime <8000) {
-    motorDriver.drive(0,120,0);
-  } else {
-    motorDriver.drive(0,0,0);
+
+  // Lachlan McDermott
+  // 1/24/2026
+  
+  // Time variable setup defintion
+  const signed long prepAndSealTime   = 10000;
+  const signed long diveTime          = 3000;
+  const signed long hoopMoveTime      = 6000;
+  const signed long surfaceTime       = 3000;
+
+  unsigned long startDiving           = prepAndSealTime;
+  unsigned long startHoopMove         = startDiving + diveTime;
+  unsigned long startSurfacing        = startHoopMove + hoopMoveTime;
+  unsigned long turnOffAUV            = startSurfacing + surfaceTime;
+
+  // IMPORTANT NOTES FOR DEBUGGING!!!
+  // Motors A & B horizontal thrusters, motor C is vertical thruster
+  // If the robot is moving backwards or spinning check motor spinning direction
+  // Before connecting motors check to see which way the propeller spins dry test
+
+  //IMPLEMENT DRY LAND TEST CODE??
+
+
+  //PREPARATION
+  if (currentTime < startDiving) 
+  {
+    motorDriver.drive(0, 0, 0); 
+  }
+  else if (currentTime < startHoopMove)
+  {
+      // If the robot isn't diving invert the power number
+    motorDriver.drive(0, 0, 120);
+  }
+  else if (currentTime > startSurfacing)
+  {
+    //Might need to add power to motor C to stop the robot from sinking...?
+    motorDriver.drive(120, 120, 0);
+  }
+  else if (currentTime > turnOffAUV)
+  {
+    motorDriver.drive(0, 0, -120);
+  }
+  else
+  {
+    motorDriver.drive(0, 0, 0);
   }
 
   // DONT CHANGE CODE BELOW THIS LINE 
