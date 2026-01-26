@@ -79,10 +79,10 @@ void loop() {
   // 1/24/2026
   
   // Time variable setup defintion
-  const signed long prepAndSealTime   = 10000;
+  const signed long prepAndSealTime   = 5000;
   const signed long diveTime          = 3000;
   const signed long hoopMoveTime      = 6000;
-  const signed long surfaceTime       = 3000;
+  const signed long surfaceTime       = 5000;
 
   unsigned long startDiving           = prepAndSealTime;
   unsigned long startHoopMove         = startDiving + diveTime;
