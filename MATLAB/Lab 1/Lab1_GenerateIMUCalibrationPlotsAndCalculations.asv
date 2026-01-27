@@ -86,7 +86,7 @@ fprintf('\n');
 
 zData = mean(trial1.accelZ);
 scaleFactor = 9.8 / zData;
-fprintf('Scale factor %.4e', scaleFactor);
+fprintf('Scale factor %.4e', scaleF)
 
 %GENERATE PLOTS
 figure('Name', 'Calibration Plots', 'NumberTitle', 'off');
@@ -95,7 +95,7 @@ figure('Name', 'Calibration Plots', 'NumberTitle', 'off');
 subplot(2, 2, 1);
 plot(trial1.accelX*scaleFactor, 'red'); 
 title('Trial 1: Zero X');
-ylabel('Acceleration [m/s^2]');
+ylabel('Acceleration [millg]');
 xlabel('Samples [count]');
 grid on;
 
@@ -103,7 +103,7 @@ grid on;
 subplot(2, 2, 2);
 plot(trial1.accelY*scaleFactor, 'green'); 
 title('Trial 1: Zero Y');
-ylabel('Acceleration [m/s^2]');
+ylabel('Acceleration [millg]');
 xlabel('Samples [count]');
 grid on;
 
@@ -111,7 +111,7 @@ grid on;
 subplot(2, 2, 3);
 plot(trial1.accelZ*scaleFactor, 'blue');
 title('Trial 1: Accelerated Z');
-ylabel('Acceleration [m/s^2]');
+ylabel('Acceleration [millg]');
 xlabel('Samples [count]');
 grid on;
 
@@ -119,6 +119,6 @@ grid on;
 subplot(2, 2, 4);
 plot(trial2.accelZ*scaleFactor, 'blue');
 title('Trial 2: Zero Z');
-ylabel('Acceleration [m/s^2]');
+ylabel('Acceleration [millg]');
 xlabel('Samples [count]');
 grid on;
