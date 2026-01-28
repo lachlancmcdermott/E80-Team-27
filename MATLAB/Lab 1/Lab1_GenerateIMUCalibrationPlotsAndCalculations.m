@@ -2,9 +2,22 @@ clear;
 clc;
 
 %!!! REPLACE WITH CORRECT TRIAL FILE NUMBERS DURING LAB !!!
-trial1 = dataLog('005'); % Z axis accelerating trial
-trial2 = dataLog('006'); % X axis accelerating trial
-trial3 = dataLog('007'); % Y axis accelerating trial
+trial1 = dataLog('001'); % Z axis accelerating trial
+trial2 = dataLog('009'); % X axis accelerating trial
+trial3 = dataLog('003'); % Y axis accelerating trial
+
+trial2.accelY = trial2.accelY(1:125)
+trial2.accelX = trial2.accelX(1:125)
+trial2.accelZ = trial2.accelZ(1:125)
+
+trial1.accelY = trial1.accelY(1:125)
+trial1.accelX = trial1.accelX(1:125)
+trial1.accelZ = trial1.accelZ(1:125)
+
+trial3.accelY = trial3.accelY(1:125)
+trial3.accelX = trial3.accelX(1:125)
+trial3.accelZ = trial3.accelZ(1:125)
+
 
 %Calculations and mean values
 confLev = 0.95;
@@ -58,16 +71,19 @@ fprintf(' \n');
 
 %T-TEST AND DATA
 %x vs. y
-[h1, p1] = ttest(trial1.accelX, trial1.accelY);
+[h1,p1,ci,stats] = ttest(trial1.accelX, trial1.accelY);
 fprintf('x vs. y: P-Value is %.4e\n', p1);
+fprintf('x vs. y: h is %.e\n', h1);
 
 %x vs. z    
 [h2, p2] = ttest(trial2.accelX, trial2.accelZ);
 fprintf('x vs. z: P-Value is %.4e\n', p2);
+fprintf('x vs. z: h is %.e\n', h2);
 
 %y vs. z
 [h3, p3] = ttest(trial3.accelY, trial3.accelZ);
 fprintf('y vs. z: P-Value is %.4e\n', p3);
+fprintf('y vs. z: h is %.e\n', h3);
 
 
 %CONVERSION TO M/S^2
@@ -83,32 +99,36 @@ figure('Name', 'Calibration Plots', 'NumberTitle', 'off');
 
 %X Zero
 subplot(2, 2, 1);
-plot(trial1.accelX*scaleFactor, 'red'); 
+plot(trial1.accelX, 'red'); 
 title('Trial 1: Zero X');
-ylabel('Acceleration [m/s^2]');
+ylabel('Teensy units [count]');
 xlabel('Samples [count]');
+xlim([0 125]);
 grid on;
 
 %Y Zero
 subplot(2, 2, 2);
-plot(trial1.accelY*scaleFactor, 'green'); 
+plot(trial1.accelY, 'green'); 
 title('Trial 1: Zero Y');
-ylabel('Acceleration [m/s^2]');
+ylabel('Teensy units [count]');
 xlabel('Samples [count]');
+xlim([0 125]);
 grid on;
 
 %Z accelerated
 subplot(2, 2, 3);
-plot(trial1.accelZ*scaleFactor, 'blue');
+plot(trial1.accelZ, 'blue');
 title('Trial 1: Accelerated Z');
-ylabel('Acceleration [m/s^2]');
+ylabel('Teensy units [count]');
 xlabel('Samples [count]');
+xlim([0 125]);
 grid on;
 
 %Z zero
 subplot(2, 2, 4);
-plot(trial2.accelZ*scaleFactor, 'blue');
+plot(trial2.accelZ, 'blue');
 title('Trial 2: Zero Z');
-ylabel('Acceleration [m/s^2]');
+ylabel('Teensy units [count]');
 xlabel('Samples [count]');
+xlim([0 125]);
 grid on;
