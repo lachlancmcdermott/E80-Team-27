@@ -1,0 +1,137 @@
+% Script 1: Calibration & Stats
+% Author: Jack Van der Reis
+% Requirements: 
+% Test 1 (001): Flat (Z facing Up) -> Gives Zero X, Zero Y, Gravity Z
+% Test 2 (002): Side (X facing Up) -> Gives Zero Y, Zero Z, Gravity X
+% Test 3 (003): Front/Back (Y facing Up) -> Gives Zero X, Zero Z, Gravity Y
+
+clear; clc; close all;
+
+% Load Data from 3 Separate Tests
+
+% Load Test 1 (Flat, Z Up)
+filenum = '005';
+logreader; 
+ZeroX_Test1 = accelX; 
+ZeroY_Test1 = accelY; 
+GravityZ_Test1 = accelZ;
+
+% Load Test 2 (Back/Front, X Up)
+filenum = '006';
+logreader;
+ZeroY_Test2 = accelY; % Y is zero here
+ZeroZ_Test2 = accelZ; % Z is zero here
+
+% Load Test 3 (Side, Y Up)
+filenum = '007';
+logreader;
+ZeroX_Test3 = accelX; % X is zero here
+ZeroZ_Test3 = accelZ; % Z is zero here
+
+% Calculate Teensy Scale Factor (WRITE DOWN!)
+mean_1g = mean(GravityZ_Test1);
+mean_0g = mean(ZeroZ_Test2);
+Scale_Factor = 9.81 / abs(mean_1g - mean_0g);
+
+fprintf('The Teensy Scale Factor is %.6f', Scale_Factor);
+
+% Unit Conversion for useful graphing/testing
+
+BiasX = -0.2668; % Replace with your ZeroX Mean
+BiasY = 0.0592; % Replace with your ZeroY Mean
+BiasZ = 0.5151; % Replace with your ZeroZ Mean
+
+% Test 1 Data Conversion
+True_ZeroX_1 = ZeroX_Test1 * Scale_Factor - BiasX;
+True_ZeroY_1 = ZeroY_Test1 * Scale_Factor - BiasY;
+True_GravityZ_1 = GravityZ_Test1 * Scale_Factor - BiasZ;
+
+% Test 2 Data Conversion
+True_ZeroY_2 = ZeroY_Test2 * Scale_Factor - BiasY;
+True_ZeroZ_2 = ZeroZ_Test2 * Scale_Factor - BiasZ;
+
+% Test 3 Data Conversion
+True_ZeroX_3 = ZeroX_Test3 * Scale_Factor - BiasX;
+True_ZeroZ_3 = ZeroZ_Test3 * Scale_Factor - BiasZ;
+
+% Z axis with Gravity Statistical Testing
+
+Zmean = mean(True_GravityZ_1); % Z axis mean
+Zstd = std(True_GravityZ_1); % Z standard deviation
+Zn = length(True_GravityZ_1); % How many data points for Z
+Zse = Zstd / sqrt(Zn); % Standard Error for Z
+ConfidenceLowerZ = Zmean - (1.96 * Zse); % Lower confidence bound for Z
+ConfidenceUpperZ = Zmean + (1.96 * Zse); % Upper confidence bound for Z
+
+fprintf('The mean value for Z acceleration is %.4f m/s^2\n', Zmean);
+fprintf('The standard deviation for Z is %.4f\n', Zstd);
+fprintf('The Standard Error for Z is %.4f\n', Zse);
+fprintf('The 95%% CI Bounds are [%.4f, %.4f]\n', ConfidenceLowerZ, ConfidenceUpperZ);
+
+% X, Y, and Z Axis Confidence Intervals when No Acceleration
+
+Xmean = mean(True_ZeroX_1);
+Xstd = std(True_ZeroX_1);
+Xn = length(True_ZeroX_1);
+ConfidenceLowerX = Xmean - (1.96 * (Xstd / sqrt(Xn)));
+ConfidenceUpperX = Xmean + (1.96 * (Xstd / sqrt(Xn)));
+
+Ymean = mean(True_ZeroY_1);
+Ystd = std(True_ZeroY_1);
+Yn = length(True_ZeroY_1);
+ConfidenceLowerY = Ymean - (1.96 * (Ystd / sqrt(Yn)));
+ConfidenceUpperY = Ymean + (1.96 * (Ystd / sqrt(Yn)));
+
+Z0mean = mean(True_ZeroZ_2);
+Z0std = std(True_ZeroZ_2);
+Z0n = length(True_ZeroZ_2);
+ConfidenceLowerZ0 = Z0mean - (1.96 * (Z0std / sqrt(Z0n)));
+ConfidenceUpperZ0 = Z0mean + (1.96 * (Z0std / sqrt(Z0n)));
+
+fprintf('Zero X (Test 1): Mean %.4f m/s^2, CI [%.4f, %.4f]\n', Xmean, ConfidenceLowerX, ConfidenceUpperX);
+fprintf('Zero Y (Test 1): Mean %.4f m/s^2, CI [%.4f, %.4f]\n', Ymean, ConfidenceLowerY, ConfidenceUpperY);
+fprintf('Zero Z (Test 2): Mean %.4f m/s^2, CI [%.4f, %.4f]\n\n', Z0mean, ConfidenceLowerZ0, ConfidenceUpperZ0);
+
+% T-Tests to determine if the zero reading is statistically different
+
+% T-Test 1: Zero X vs Zero Y (Test 1)
+[h1, p1] = ttest(ZeroX_Test1, ZeroY_Test1);
+fprintf('X vs Y: P-Value is %.4e\n', p1);
+
+% T-Test 2: Zero Y vs Zero Z
+[h2, p2] = ttest(ZeroY_Test2, ZeroZ_Test2);
+fprintf('Y vs Z: P-Value is %.4e\n', p2);
+
+
+% T-Test 3: Zero X vs Zero Z (Test 3)
+[h3, p3] = ttest(ZeroX_Test3, ZeroZ_Test3);
+fprintf('X vs Z: P-Value is %.4e\n', p3);
+
+
+% Graphs for Submission
+
+figure(1); clf;
+
+% Subplot 1: Zero X (Test 1)
+subplot(2,2,1); 
+plot(True_ZeroX_1);
+title('Zero Acceleration Due to Gravity, X Axis'); 
+ylabel('Acceleration (m/s^2)');
+
+% Subplot 2: Zero Y (Test 1)
+subplot(2,2,2); 
+plot(True_ZeroY_1);
+title('Zero Acceleration Due to Gravity, Y Axis'); 
+ylabel('Acceleration (m/s^2)');
+
+% Subplot 3: Zero Z (Test 2)
+subplot(2,2,3); 
+plot(True_ZeroZ_2);
+title('Zero Acceleration Due to Gravity, Z Axis'); 
+ylabel('Acceleration (m/s^2)');
+
+% Subplot 4: Gravity Z (Test 1)
+subplot(2,2,4); 
+plot(True_GravityZ_1); 
+title('Acceleration Due to Gravity, Z Axis'); 
+ylabel('Acceleration (m/s^2)');

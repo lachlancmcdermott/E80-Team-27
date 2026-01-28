@@ -6,10 +6,10 @@ test = dataLog('004');
 
 %CALIBRATION
 %!!! REPLACE W/ NUMBERS FROM CALIBRATION !!!
-xZeroOffset = -34.0029;
+xZeroOffset = 100;
 yZeroOffset = 100;
 zZeroOffset = 100;
-scaleFactor = 1.2035e-02;
+scaleFactor = 1;
 
 test.accelX = test.accelX - xZeroOffset;
 test.accelY = test.accelY - yZeroOffset;

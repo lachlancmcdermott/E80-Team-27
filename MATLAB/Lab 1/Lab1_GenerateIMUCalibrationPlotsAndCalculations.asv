@@ -66,7 +66,7 @@ fprintf('x vs. y: P-Value is %.4e\n', p1);
 fprintf('x vs. z: P-Value is %.4e\n', p2);
 
 %y vs. z
-[h3, p3] = ttest(trial3.accelY, trial3.accelZ);
+[h3, p3] = ttest(trial3.accelY, );
 fprintf('y vs. z: P-Value is %.4e\n', p3);
 
 
