@@ -58,21 +58,21 @@ fprintf(' \n');
 
 %T-TEST AND DATA
 %x vs. y
-[h1, p1] = ttest2(trial1.accelX, trial1.accelY);
+[h1, p1] = ttest(trial1.accelX, trial1.accelY);
 if h1 == 1
     fprintf('1. X Zero vs Y Zero:     Statistically DIFFERENT (p = %.4e)\n', p1);
 else
     fprintf('1. X Zero vs Y Zero:     Statistically SAME (p = %.4e)\n', p1);
 end
 %x vs. z
-[h2, p2] = ttest2(trial1.accelX, trial2.accelZ);
+[h2, p2] = ttest(trial1.accelX, trial2.accelZ);
 if h2 == 1
     fprintf('2. X Zero vs Z Zero:     Statistically DIFFERENT (p = %.4e)\n', p2);
 else
     fprintf('2. X Zero vs Z Zero:     Statistically SAME (p = %.4e)\n', p2);
 end
 %y vs. z
-[h3, p3] = ttest2(trial1.accelY, trial2.accelZ);
+[h3, p3] = ttest(trial1.accelY, trial2.accelZ);
 if h3 == 1
     fprintf('3. Y Zero vs Z Zero:     Statistically DIFFERENT (p = %.4e)\n', p3);
 else
