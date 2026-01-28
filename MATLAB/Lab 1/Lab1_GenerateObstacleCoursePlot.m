@@ -2,7 +2,7 @@ clear;
 clc;
 
 %!!! REPLACE WITH CORRECT TRIAL FILE NUMBERS DURING LAB !!!
-test = dataLog('004');
+test = dataLog('003');
 
 %CALIBRATION
 %!!! REPLACE W/ NUMBERS FROM CALIBRATION !!!
