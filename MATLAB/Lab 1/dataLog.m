@@ -1,3 +1,10 @@
+%dataLog.m
+%Lachlan McDermott
+%lmcdermott@hmc.edu
+%1/30/2026
+
+%Function takes in generated datalog from Teensy
+%Returns new struct with all data inside, for easy access
 function logData = dataLog(n)
 
     infofile = strcat('INF', n, '.TXT');
@@ -28,7 +35,6 @@ function logData = dataLog(n)
     
     colLength = 256; 
 
-    
     for i = 1:numel(varTypes)
         if isfield(dataSizes, varTypes{i})
             varLengths(i) = dataSizes.(varTypes{i});

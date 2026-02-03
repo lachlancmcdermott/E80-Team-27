@@ -1,3 +1,8 @@
+%Lab1_GenerateObstacleCoursePlot.m
+%Lachlan McDermott
+%lmcdermott@hmc.edu
+%1/30/2026
+
 clear; 
 clc;
 
@@ -15,7 +20,7 @@ test.accelX = test.accelX - xZeroOffset;
 test.accelY = test.accelY - yZeroOffset;
 test.accelZ = test.accelZ - zZeroOffset;
 
-%Generate acceleration plots
+%Generate acceleration plot
 figure('Name', 'ROV Acceleration Plot');
 hold on;
 plot(test.accelX*scaleFactor, 'red', 'LineWidth', 1);
