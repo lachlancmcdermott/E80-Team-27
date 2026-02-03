@@ -1,4 +1,4 @@
-clear; 
+4clear; 
 clc;
 
 %!!! REPLACE WITH CORRECT TRIAL FILE NUMBERS DURING LAB !!!
