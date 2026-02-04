@@ -5,7 +5,8 @@ output = dataLog('004');
 frequency = 200;
 %frequency = 175000
 amplitude = 1
-offsetSignal = 0.6
+offsetSignal = 0.4
+%offsetSignal = 0.6
 
 %generate plot of sample versus measured voltage
 
