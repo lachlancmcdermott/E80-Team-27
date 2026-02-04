@@ -15,7 +15,7 @@ offsetSignal = 0.4;
 
 %TEENSY UNIT
 pinVoltage = 3.3;
-%2^10
+%2^10 (10 bit adc)
 teensyUnit = pinVoltage / 1023;
 fprintf('One Teensy Unit:\n', teensyUnit);
 
@@ -24,7 +24,8 @@ figure(1);
 clf;
 plot(data, 'r');
 
-title(["Teensy Data: " + frequency + " Hz Input (" + amplitude + " Vpp)"]);
+% + frequency + " Hz Input (" + amplitude + " Vpp)
+title(["Teensy Data:"]);
 xlabel("Sample Number");
 ylabel("Teensy Units (0-1023)");
 grid on;
@@ -36,6 +37,5 @@ avg = mean(diff(indexMaxPeak));
 period = 1/frequency;
 sampleRate = avg / period;
 
-fprintf('\nSample Rate Calculation:\n');
 fprintf('Average Samples per Cycle: %.2f\n', avg);
 fprintf('Calculated Sample Rate: %.2f Hz\n', sampleRate);
