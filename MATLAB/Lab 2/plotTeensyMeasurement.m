@@ -2,16 +2,19 @@
 % lmcdermott@g.hmc.edu
 % 2/3/2026
 
-%load data
+%load dataz
 %MIGHT NOT BE A DOUBLE TBH
-data = double(matlablogging()); 
+data = load('1kohm.txt'); 
+
+%dataRMS = rms(data, "all");
+%disp(dataRMS)
 
 %global variables
-frequency = 200;
-% frequency = 175000;
+%frequency = 200;
+frequency = 175000;
 amplitude = 1;
-offsetSignal = 0.4;
-% offsetSignal = 0.6;
+%offsetSignal = 0.4;
+offsetSignal = 0.6;
 
 %TEENSY UNIT
 pinVoltage = 3.3;
@@ -36,6 +39,7 @@ grid on;
 avg = mean(diff(indexMaxPeak));
 period = 1/frequency;
 sampleRate = avg / period;
+
 
 fprintf('Average Samples per Cycle: %.2f\n', avg);
 fprintf('Calculated Sample Rate: %.2f Hz\n', sampleRate);
