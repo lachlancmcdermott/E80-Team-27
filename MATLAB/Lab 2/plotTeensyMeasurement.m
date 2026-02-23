@@ -4,7 +4,8 @@
 
 %load dataz
 %MIGHT NOT BE A DOUBLE TBH
-data = load('1kohm.txt'); 
+data = load('onesevenfivekilohz.txt'); 
+%data = load('175HzLachlan.txt');
 
 %dataRMS = rms(data, "all");
 %disp(dataRMS)
@@ -32,6 +33,8 @@ title(["Teensy Data:"]);
 xlabel("Sample Number");
 ylabel("Teensy Units (0-1023)");
 grid on;
+
+
 
 %sample rate
 [pks, indexMaxPeak] = findpeaks(data, 'MinPeakHeight', mean(data));

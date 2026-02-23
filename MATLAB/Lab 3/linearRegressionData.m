@@ -1,12 +1,12 @@
 %Lachlan McDermott
-%E80 Lab 3
+%E80 Lab 4
 %2/10/2026
 %Linear Regression Script
 
 %intake data and do linear regression
 
-turbidity = [0.17; 723; 531; 265; 883]; % left to right --> pure water to mother solution 
-ratio     = [0; 0.0224; 0.0379; 0.1724; 0.2689];
+turbidity = [1.925; 1.74; 1.527; 1.321; 1.11]; % voltage 
+ratio     = [0; -0.1; -0.2; -0.3; -0.4]; % depth
 
 graph = fitlm(turbidity, ratio);
 intercept = graph.Coefficients.Estimate(1);
@@ -14,7 +14,7 @@ slope     = graph.Coefficients.Estimate(2);
 intercept_se = graph.Coefficients.SE(1);
 r_sq      = graph.Rsquared.Ordinary;
 
-xGrid = linspace(min(turbidity)-50, max(turbidity)+50, 100)';
+xGrid = linspace(min(turbidity), max(turbidity), 100)';
 yFit = predict(graph, xGrid);
 
 [~, ci_functional] = predict(graph, xGrid, 'Prediction', 'curve', 'Alpha', 0.05);
@@ -31,9 +31,9 @@ fill([xGrid; flipud(xGrid)], [ci_functional(:,1); flipud(ci_functional(:,2))], [
 plot(xGrid, yFit, 'b-', 'LineWidth', 1.5);
 plot(turbidity, ratio, 'ks', 'MarkerFaceColor', 'k');
 
-xlabel('Turbidity (NTU)');
-ylabel('V90 / Vtrans');
-title('Turbidity versus V90/Vtrans');
+xlabel('Voltage [V]');
+ylabel('Depth [m]');
+title('Voltage vs. Depth');
 legend('Observational Bounds', 'Functional Bounds', 'Line of Best Fit', 'Data', 'Location', 'southeast');
 
 stats_str = {sprintf('Equation: y = %.5f * x + %.5f', slope, intercept);
