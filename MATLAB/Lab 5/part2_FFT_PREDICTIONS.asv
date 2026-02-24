@@ -1,0 +1,131 @@
+%Lachlan McDermott
+%Lab 5 Underwater acoustics - Part 2
+%2/22/2026
+clear; 
+clc;
+close all;
+
+% Global variables
+signalAmplitude = 1.5;
+signalOffset = 0;
+samplingFrequency = 1e6; %scope sample rate
+signal1Frequency = 11000; %sine wave
+signal2Frequency = 12000; %sine wave
+signal3Frequency = 11000; %square wave
+numberOfPeriods = 50;
+
+totalTime = numberOfPeriods / signal1Frequency;
+dt = 1 / samplingFrequency;
+t = 0:dt:totalTime;
+N = length(t);
+
+xAxis = (0:N-1) * (samplingFrequency / N); 
+f_half = samplingFrequency * (0:floor(N/2)) / N;
+
+%signals
+signal1 = signalAmplitude * sin(2*pi*signal1Frequency*t) + signalOffset;
+signal2 = signalAmplitude * sin(2*pi*signal2Frequency*t) + signalOffset;
+signal3 = signalAmplitude * square(2*pi*signal3Frequency*t) + signalOffset;
+
+%signal 1
+fft1 = fft(signal1);
+convertComplex1 = abs(fft1 / N);
+convertedfft1 = convertComplex1(1:floor(N/2)+1);
+convertedfft1(2:end-1) = 2 * convertedfft1(2:end-1);
+
+figure('Name', 'Signal 1');
+subplot(2,1,1);
+plot(xAxis / 1000, 2 * abs(fft1) / N);
+xlim([0 100]); % 100 kHz window
+ylim([0 2]);
+grid on;
+title('Signal 1 FFT');
+xlabel('Frequency [kHz]');
+ylabel('Magnitude [V]');
+
+subplot(2,1,2); 
+stem(f_half / 1000, convertedfft1);
+xlim([0 100]);
+ylim([0 2]);
+grid on;
+xlabel('Frequency [kHz]');
+ylabel('Magnitude [V]');
+
+% signal 2
+fft2 = fft(signal2);
+convertComplex2 = abs(fft2 / N);
+convertedfft2 = convertComplex2(1:floor(N/2)+1);
+convertedfft2(2:end-1) = 2 * convertedfft2(2:end-1);
+
+figure('Name', 'Signal 2');
+subplot(2,1,1);
+plot(xAxis / 1000, 2 * abs(fft2) / N);
+xlim([0 100]);
+ylim([0 2]);
+grid on;
+title('Signal 2 FFT');
+xlabel('Frequency [kHz]');
+ylabel('Magnitude [V]');
+
+subplot(2,1,2); 
+stem(f_half / 1000, convertedfft2);
+xlim([0 100]);
+ylim([0 2]);
+grid on;
+xlabel('Frequency [kHz]');
+ylabel('Magnitude [V]');
+
+% signal 3 normal
+fft3 = fft(signal3);
+convertedComplex3 = abs(fft3 / N);
+convertedfft3 = convertedComplex3(1:floor(N/2)+1);
+convertedfft3(2:end-1) = 2 * convertedfft3(2:end-1);
+
+figure('Name', 'Signal 3');
+subplot(2,1,1);
+plot(xAxis / 1000, 2 * abs(fft3) / N);
+xlim([0 100]);
+ylim([0 2]);
+grid on;
+title('Signal 3 FFT');
+xlabel('Frequency [kHz]');
+ylabel('Magnitude [V]');
+
+subplot(2,1,2); 
+stem(f_half / 1000, convertedfft3);
+xlim([0 100]);
+ylim([0 2]);
+grid on;
+xlabel('Frequency [kHz]');
+ylabel('Magnitude [V]');
+
+% hanning window
+hanningSignal = signal3 .* hann(N)'; 
+fft4 = fft(hanningSignal);
+correctionFactor = 2; 
+
+convertedComplex4 = abs(fft4 / N) * correctionFactor;
+convertedfft4 = convertedComplex4(1:floor(N/2)+1);
+convertedfft4(2:end-1) = 2 * convertedfft4(2:end-1);
+
+figure('Name', 'Signal 3: Hanning');
+
+%frq domain
+subplot(2,1,1);
+plot(xAxis / 1000, 2 * abs(fft4) / N * correctionFactor);
+xlim([0 100]); 
+ylim([0 2]); 
+grid on;
+title('Frequency Domain: Signal 3 w/ Hanning Window FFT');
+xlabel('Frequency [kHz]'); 
+ylabel('Magnitude [V]');
+
+%plotting in time domain
+subplot(2,1,2); 
+plot(t * 1000, signal3_hanning);
+xlim([0, max(t)*1000]); 
+ylim([-2 2]); 
+grid on;
+title('Time Domain: Signal 3 w/ Hanning Window Envelope');
+xlabel('Time [ms]'); 
+ylabel('Voltage [V]');
