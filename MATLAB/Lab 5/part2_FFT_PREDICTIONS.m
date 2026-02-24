@@ -120,7 +120,7 @@ title('Hanning applied in frequncy domain');
 xlabel('Frequency [kHz]'); 
 ylabel('Magnitude [V]');
 
-%time domain
+%time domain_
 subplot(2,1,2); 
 plot(t * 1000, hanningSignal);
 xlim([0, max(t)*1000]); 
