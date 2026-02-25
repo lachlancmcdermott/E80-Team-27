@@ -1,0 +1,38 @@
+%Lachlan McDermott
+%Lab 5 Underwater accoustics - Part 4
+%2/22/2026
+
+clear; 
+clc;
+
+%intake data
+%!!!! replace in lab with data from measurements !!!!
+distance_m = [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40];%spacing rel to the wall
+measured_V = [1.80, 0.95, 0.45, 0.55, 0.30, 0.20, 0.25, 0.18];%fft max magnitude 
+
+
+%theoretical curve
+logR= log(distance_m);
+logV = log(measured_V);
+
+%p = polyfit(x,y,n) returns the coefficients for a polynomial p(x) of degree n that is a best fit (in a least-squares sense) for the data in y. 
+% The coefficients in p are in descending powers, and the length of p is
+% n+1 yayahdah...
+
+p = polyfit(logR, logV, 1); 
+c= exp(p(2));
+
+r_theoretical = linspace(min(distance_m), max(distance_m), 100);
+V_theoretical = c ./ r_theoretical;
+
+% --- 4. Plotting ---
+figure('Name', 'Beacon 1 Magnitude vs. Distance');
+plot(distance_m, measured_V, '-o', 'LineWidth', 1.5, 'MarkerSize', 6); hold on;
+
+plot(r_theoretical, V_theoretical, 'r--', 'LineWidth', 2); hold off;
+
+grid on;
+title('Beacon 1: Received Voltage Magnitude vs. Distance');
+xlabel('Distance from Beacon [m]');
+ylabel('Received FFT Magnitude [V]');
+legend('Measured Data (w/ Multipath)', 'Analytical Model (V = C/r)');
