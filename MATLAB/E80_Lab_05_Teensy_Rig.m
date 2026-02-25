@@ -33,12 +33,27 @@ micSignal_100ks = micSignal;
 % CHANGE WHEN SAMPLING FREQ CHANGES
 %micSignal_10ks = micSignal
 
+figure
+plot(t, micSignal_100ks);
+xlabel('Time (s)')
+ylabel('Mic Voltage (V)')
+title('Mic Signal Over Time')
 
+
+%{
+figure
+plot(t, micSignal_10ks);
+xlabel('Time (s)')
+ylabel('Mic Voltage (V)')
+title('Mic Signal Over Time')
+%}
+
+%{
 Y_100 = fft(micSignal_100ks);
 %Y_10 = fft(micSignal_10ks);
 hundredKHzplot = figure(1);
 stem(Y_100);
-%{
+
 tenKHzplot = figure(2);
 stem(Y_10);
 %}
