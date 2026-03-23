@@ -1,44 +1,51 @@
-%Lachlan McDermott
-%Lab 5 Underwater accoustics - Part 4
-%2/22/2026
-
 clear; 
 clc;
 
-%intake data
-%!!!! replace in lab with data from measurements !!!!
+% Intake data
+%distances = [0.0, 0.02, 0.04, 0.06, 0.08, 0.16]; % Note: Check if 0.8 should be 0.08!
+%recordedVoltages = [341, 243, 212, 198, 46, 92];
 
-distances = [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40];
-%spacing rel to the wall and the beacon
-recordedVoltages = [1.80, 1.5, 0.45, 30, 0.98, 0.65, 0.1, 0.2];
-%fft max magnitude 
+distances = [0.0, 0.02, 0.04, 0.06, 0.16]; % Note: Check if 0.8 should be 0.08!
 
+recordedVoltages = [341, 243, 212, 198, 92];
 
-%theoretical curve
-logR= log(distances);
-logV = log(recordedVoltages);
+% 1. Scale voltages FIRST so the model fits the plotted data
+scaledVoltages = recordedVoltages / 2 / sqrt(2) + 500;
 
-%p = polyfit(x,y,n) returns the coefficients for a polynomial p(x) of degree n that is a best fit (in a least-squares sense) for the data in y. 
-% The coefficients in p are in descending powers, and the length of p is
-% n+1 yayahdah...
+% Exclude the 0.0 point to prevent log(0)
+fit_distances = distances(2:end);
+fit_voltages = scaledVoltages(2:end);
 
+% Power-law curve fit
+logR = log(fit_distances);
+logV = log(fit_voltages);
 p = polyfit(logR, logV, 1); 
-c = exp(p(2));
+c = exp(p(2))
+exponent = p(1); 
 
-r = linspace(min(distances), max(distances), 100);
-v = c./r;
+r = linspace(0.01, max(distances), 100);
+v = c .* r.^exponent; % Use the calculated exponent for an accurate fit
 
-%plot
-figure('Name', 'Beacon Magnitude vs. Distance');
-grid on;
+% Plotting
+figure('Name', 'Beacon 1 Magnitude vs. Distance');
 
-plot(distances, recordedVoltages); 
+yyaxis left;
+plot(distances, scaledVoltages, 'o', 'DisplayName', 'Measured voltage magnitude (linear)'); 
 hold on;
+plot(r, v, 'LineWidth', 1, 'DisplayName', sprintf('Model')); 
+ylabel('FFT [V] (linear)');
+% Set axis color to match the lines for clarity
+ax = gca;
+ax.YColor = 'k'; 
 
-plot(r, v); 
 
-title('Beacon Received Voltage Magnitude vs. Distance');
+yyaxis right;
+plot(distances, scaledVoltages, '-', 'LineWidth', 1, 'DisplayName', 'Measured Data (log)');
+set(gca, 'YScale', 'log'); % This transforms the right axis to be exponential/logarithmic
+ylabel('FFT Magnitude [V] (log)');
+
+% Formatting
+grid on;
+title('Beacon 1 Voltage vs. Distance');
 xlabel('Distance from Beacon (abs) [m]');
-ylabel('Received FFT Magnitude [V]');
-equationLegend = sprintf('Analytical Model (V = %.3f / r)', c);
-legend('Measured Data (w/ Multipath)', equationLegend);
+legend('Location', 'northeast');
