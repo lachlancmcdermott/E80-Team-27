@@ -112,7 +112,7 @@ figure('Name', 'Signal 3 w/ Hanning Window');
 
 %frq domain
 subplot(2,1,1);
-plot(xAxis / 1000, 2 * abs(fft4) / N * correctionFactor);
+plot(xAxis / 1000, 2 * abs(fft4) / N * correctionFactor / 2 / sqrt(2));
 xlim([0 100]); 
 ylim([0 2]); 
 grid on;

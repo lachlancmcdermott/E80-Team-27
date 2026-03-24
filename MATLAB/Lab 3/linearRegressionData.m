@@ -5,8 +5,8 @@
 
 %intake data and do linear regression
 
-turbidity = [1.925; 1.74; 1.527; 1.321; 1.11]; % voltage 
-ratio     = [0; -0.1; -0.2; -0.3; -0.4]; % depth
+turbidity = [531, 885, 1230, 1568, 1918]; 
+ratio     = [8.358812146, 13.21644246, 18.69087217, 23.91774446, 29.40472817]; 
 
 graph = fitlm(turbidity, ratio);
 intercept = graph.Coefficients.Estimate(1);
@@ -31,9 +31,9 @@ fill([xGrid; flipud(xGrid)], [ci_functional(:,1); flipud(ci_functional(:,2))], [
 plot(xGrid, yFit, 'b-', 'LineWidth', 1.5);
 plot(turbidity, ratio, 'ks', 'MarkerFaceColor', 'k');
 
-xlabel('Voltage [V]');
-ylabel('Depth [m]');
-title('Voltage vs. Depth');
+xlabel('Fan Speed [RPM]');
+ylabel('Air Velocity [m/s]');
+title('Measured Calibration Curve for Wind Tunnel Air Velocity [m/s] vs. Fan Speed [RPM]');
 legend('Observational Bounds', 'Functional Bounds', 'Line of Best Fit', 'Data', 'Location', 'southeast');
 
 stats_str = {sprintf('Equation: y = %.5f * x + %.5f', slope, intercept);
