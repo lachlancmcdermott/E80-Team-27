@@ -79,15 +79,15 @@ void loop() {
   // 1/24/2026
   
   // Time variable setup defintion
-  const signed long prepAndSealTime   = 5000;
-  const signed long diveTime          = 3000;
-  const signed long hoopMoveTime      = 6000;
-  const signed long surfaceTime       = 5000;
+  const signed int prepAndSealTime   = 60000;
+  const signed int diveTime          = 10000;
+  const signed int hoopMoveTime      = 10000;
+  const signed int surfaceTime       = 10000;
 
-  unsigned long startDiving           = prepAndSealTime;
-  unsigned long startHoopMove         = startDiving + diveTime;
-  unsigned long startSurfacing        = startHoopMove + hoopMoveTime;
-  unsigned long turnOffAUV            = startSurfacing + surfaceTime;
+  unsigned int startDiving           = prepAndSealTime;
+  unsigned int startHoopMove         = startDiving + diveTime;
+  unsigned int startSurfacing        = startHoopMove + hoopMoveTime;
+  unsigned int turnOffAUV            = startSurfacing + surfaceTime;
 
   // IMPORTANT NOTES FOR DEBUGGING!!!
   // Motors A & B horizontal thrusters, motor C is vertical thruster
@@ -107,7 +107,7 @@ void loop() {
       // If the robot isn't diving invert the power number
     motorDriver.drive(0, 0, 120);
   }
-  else if (currentTime > startSurfacing)
+  else if (currentTime > startSurfacing && currentTime<turnOffAUV )
   {
     //Might need to add power to motor C to stop the robot from sinking...?
     motorDriver.drive(120, 120, 0);
