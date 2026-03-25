@@ -4,17 +4,16 @@ clc;
 %!!! REPLACE WITH CORRECT TRIAL FILE NUMBERS DURING LAB !!!
 %trial1 = dataLog('001'); % accelerating trial
 
-% time
-dt = 0.099; % The sampling rate
-t = 0:dt:10; % The time array
+
 
 % accelerations
-%x = trial1.accelY(1:125);
-%y = trial1.accelX(1:125);
+x = trial1.accelY(1:125);
+y = trial1.accelX(1:125);
 
-% TEST FUNCTIONS
-x = sin(t);
-y = 0*t;
+% time
+dt = 0.099; % The sampling rate
+t = (0:length(x)-1)*dt; % The time array
+
 
 % velocities
 v_x = cumtrapz(t,x); % Integrate the true acceleration to get the true velocity
