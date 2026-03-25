@@ -1,23 +1,36 @@
+%Lab1_GenerateObstacleCoursePlot.m
+%Lachlan McDermott
+%lmcdermott@hmc.edu
+%1/30/2026
+
 clear; 
 clc;
 
-%!!! REPLACE WITH CORRECT TEST NUMBERS !!!
-test = dataLog('004');
+%!!! REPLACE WITH CORRECT TRIAL FILE NUMBERS DURING LAB !!!
+test = dataLog('023');
 
-%Generate acceleration plot for underwater course
+%CALIBRATION
+%!!! REPLACE W/ NUMBERS FROM CALIBRATION !!!
+xZeroOffset = -8.2000;
+yZeroOffset = 29.0800;
+zZeroOffset = -12.5120;
+scaleFactor = 0.0097;
+
+test.accelX = test.accelX - xZeroOffset;
+test.accelY = test.accelY - yZeroOffset;
+test.accelZ = test.accelZ - zZeroOffset;
+
+%Generate acceleration plot
 figure('Name', 'ROV Acceleration Plot');
-plot(test.accelX, 'red', 'LineWidth', 1); 
 hold on;
-plot(test.accelY, 'green', 'LineWidth', 1);
-plot(test.accelZ, 'blue', 'LineWidth', 1);
+plot(test.accelX*scaleFactor, 'red', 'LineWidth', 1);
+plot(test.accelY*scaleFactor, 'green', 'LineWidth', 1); 
+plot(test.accelZ*scaleFactor, 'blue', 'LineWidth', 1); 
+xlim([150, 1000]);
+hold off;
 
-%FOR DATA TRIMMING
-axis([0 63 -400 1400])
-
-xlabel('Time [samples]')
-ylabel('Acceleration [m/s^2]')
-title('Measured ROV Acceleration in Obstacle Course')
-legend('x Acceleration', 'y Acceleration', 'z Acceleration');
-    
-grid on
-hold off
+title('ROV Acceleration through Obstacle Course');
+ylabel('Accel [m/s^2]');
+xlabel('Samples [count]');
+legend('X Acceleration', 'Y Acceleration', 'Z Acceleration');
+grid on;

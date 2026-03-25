@@ -3,6 +3,7 @@
 
 function teensyanalog=matlablogging(length)
     length = 5000;  % 5000 is hardcoded buffer size on Teensy
+    %CHECK SERIAL PORT, MAKE SURE IT MATCHES THE ONE ON ARDUINO IDE
     s = serial('COM7','BaudRate',115200);
     set(s,'InputBufferSize',2*length)
     fopen(s);
