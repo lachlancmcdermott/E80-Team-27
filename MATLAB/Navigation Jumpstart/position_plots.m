@@ -8,12 +8,13 @@ function position_plots(a)
 % get calculated position. It calculates the error bounds for the position
 % and velocity based on the standard deviation of the sensor and the
 % specified confidence level.
-dt = 0.099; % The sampling rate
-t = 0:dt:10; % The time array
+
 
 la = length(a);
-la2 = round(length(a)/5);
-a([la2:end]) = 0; % We only want one cycle of the sine wave.
+dt = 0.099; % The sampling rate
+t = (0:la-1)*dt; % The time array
+
+
 sigma = std(a); % The standard deviation of the noise in the accel.
 confLev = 0.95; % The confidence level for bounds
 preie = sqrt(2)*erfinv(confLev)*sigma*sqrt(dt); % the prefix to the sqrt(t)
