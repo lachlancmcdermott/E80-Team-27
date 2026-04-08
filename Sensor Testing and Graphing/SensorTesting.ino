@@ -4,6 +4,7 @@
 #include "WaterSensors.h"
 #include <Logger.h>
 #include <Printer.h>
+#include <string.h>
 
 // --- PIN DEFINITIONS ---
 const int TEMP = A2;

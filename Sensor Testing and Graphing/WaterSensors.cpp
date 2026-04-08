@@ -1,4 +1,5 @@
 #include "WaterSensors.h"
+#include <string.h>
 
 // IMPORTANT: use extern to access pins from main
 extern const int TEMP;
