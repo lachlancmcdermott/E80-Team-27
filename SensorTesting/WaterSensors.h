@@ -4,6 +4,12 @@
 #include <Arduino.h>
 #include "DataSource.h"
 
+extern const int TEMP;
+extern const int PRESSURE_PIN;
+extern const int PH_PIN;
+extern const int TURBIDITY_PIN;
+
+
 class WaterSensors : public DataSource {
 public:
   WaterSensors();

@@ -1,52 +1,99 @@
-%Plots of desired and experimental
-clear;
-clc;
+%% logreader_plot.m
+% Reads Teensy log files and plots depth, temperature, pH, and turbidity
+clear; clc;
 
-% Load your data (change file number if needed)
-trial1 = dataLog('001');
-fieldnames(trial1); % Check names
+%% --- USER SETTINGS ---
+filenum = '076';   % Change this to the file number you want
+dt = 0.2;          % Logging loop period in seconds
 
-% Extract relevant data
-depth = trial1.depth;              % actual depth
-          % vertical motor effort
-temp = trial1.temp; % temperature in °C (or uV if raw)
-ph = trial1.pH_value;                % pH readings
-turbidity = trial1.turbidity;  % turbidity readings (NTU or similar)
+%% --- FILE NAMES ---
+infofile = strcat('INF', filenum, '.TXT');
+datafile = strcat('LOG', filenum, '.BIN');
 
-% Time vector
-dt = 0.2; % LOOP_PERIOD
-N = length(depth);
+%% --- DATA TYPE SIZE MAP ---
+dataSizes.('float') = 4;
+dataSizes.('ulong') = 4;
+dataSizes.('int') = 4;
+dataSizes.('int32') = 4;
+dataSizes.('uint8') = 1;
+dataSizes.('uint16') = 2;
+dataSizes.('char') = 1;
+dataSizes.('bool') = 1;
+
+%% --- READ INFO FILE ---
+fileID = fopen(infofile);
+if fileID == -1
+    error('Cannot open info file: %s', infofile);
+end
+items = textscan(fileID,'%s','Delimiter',',','EndOfLine','\r\n');
+fclose(fileID);
+
+[ncols,~] = size(items{1});
+ncols = ncols/2;
+varNames = items{1}(1:ncols)';
+varTypes = items{1}(ncols+1:end)';
+varLengths = zeros(size(varTypes));
+colLength = 256;  % Teensy log record padding
+for i = 1:numel(varTypes)
+    varLengths(i) = dataSizes.(varTypes{i});
+end
+
+%% --- READ DATA FILE ---
+fid = fopen(datafile,'rb');
+if fid == -1
+    error('Cannot open data file: %s', datafile);
+end
+
+dataStruct = struct();  % store all columns in a struct
+for i=1:numel(varTypes)
+    fseek(fid, sum(varLengths(1:i-1)), 'bof');  % seek start of column
+    colData = fread(fid, Inf, ['*' varTypes{i}], colLength - varLengths(i));
+    dataStruct.(varNames{i}) = colData;          % store in struct
+end
+fclose(fid);
+
+%% --- TIME VECTOR ---
+N = length(dataStruct.(varNames{1}));
 t = (0:N-1)*dt;
 
-%% Plot Depth
+%% --- PLOT DATA ---
 figure;
+
+% Depth
 subplot(4,1,1);
-plot(t, depth, 'b', 'LineWidth', 1.5);
+if isfield(dataStruct,'depth')
+    plot(t, dataStruct.depth, 'b', 'LineWidth', 1.5);
+end
 xlabel('Time (s)');
 ylabel('Depth (m)');
 title('Depth vs Time');
 
-
-%% Plot Temperature
+% Temperature / Thermistor
 subplot(4,1,2);
-plot(t, thermistor, 'm', 'LineWidth', 1.5);
+if isfield(dataStruct,'temp')
+    plot(t, dataStruct.temp, 'm', 'LineWidth', 1.5);
+end
 xlabel('Time (s)');
 ylabel('Temperature (°C)');
-title('Thermistor vs Time');
+title('Temperature vs Time');
 
-%% Plot pH
+% pH
 subplot(4,1,3);
-plot(t, ph, 'g', 'LineWidth', 1.5);
+if isfield(dataStruct,'pH_value')
+    plot(t, dataStruct.pH_value, 'g', 'LineWidth', 1.5);
+end
 xlabel('Time (s)');
 ylabel('pH');
 title('pH vs Time');
 
-%% Plot Turbidity
+% Turbidity
 subplot(4,1,4);
-plot(t, turbidity, 'c', 'LineWidth', 1.5);
+if isfield(dataStruct,'turbidity')
+    plot(t, dataStruct.turbidity, 'c', 'LineWidth', 1.5);
+end
 xlabel('Time (s)');
 ylabel('Turbidity (NTU)');
 title('Turbidity vs Time');
 
-% Optional: make the plots tighter for readability
-tightfig;
+% Optional: adjust figure size for clarity
+set(gcf,'Position',[100 100 600 900]);
