@@ -10,7 +10,7 @@
 const int TEMP = A2;
 const int PRESSURE_PIN = A0;
 const int PH_PIN = A3;
-const int TURBIDITY_PIN = A4;
+const int TURBIDITY_PIN = A10;
 
 // --- GLOBAL OBJECTS ---
 WaterSensors sensors;
@@ -36,7 +36,8 @@ void loop() {
 
   // Print to serial using Printer (E80 style)
   printer.printValue(0, sensors.printState());
-  printer.printValue(1, logger.printState());
+  printer.printValue(1, sensors.printState2());
+  printer.printValue(2, logger.printState());
   printer.printToSerial();
 
   // Log to SD card

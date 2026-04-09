@@ -20,6 +20,7 @@ public:
   virtual size_t writeDataBytes(unsigned char * buffer, size_t idx);
 
   String printState();
+  String printState2();
 
   // sensor values
   float temp;

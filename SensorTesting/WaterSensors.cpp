@@ -55,6 +55,10 @@ String WaterSensors::printState() {
     s += "V_Temp:" + String(tempVoltage, 3) + " Temp:" + String(temp, 2);
     s += " | V_Depth:" + String(pressureVoltage, 3) + " Depth:" + String(depth, 2);
     s += " | V_pH:" + String(phVoltage, 3) + " pH:" + String(pH_value, 2);
-    s += " | V_Turb:" + String(turbidityVoltage, 3) + " Turb:" + String(turbidity, 2);
+
+    return s;
+}
+String WaterSensors::printState2() {
+    String s = "V_Turb:" + String(turbidityVoltage, 3) + " Turb:" + String(turbidity, 2);
     return s;
 }
