@@ -7,11 +7,12 @@
 #include <string.h>
 
 // --- PIN DEFINITIONS ---
-const int TEMP = A0;
-const int PRESSURE_PIN = A1;
-const int TURBIDITY_90 = A2;
-const int TURBIDITY_180 = A3;
-const int PH_PIN = A10;
+const int TEMP = A10;
+const int PRESSURE_PIN = A3;
+const int TURBIDITY_90 = A0;
+const int TURBIDITY_180 = A1;
+const int PH_PIN = A11;
+const int 555_TIMER = A2;
 
 // --- GLOBAL OBJECTS ---
 WaterSensors sensors;
