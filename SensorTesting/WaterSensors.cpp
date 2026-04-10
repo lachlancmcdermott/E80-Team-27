@@ -7,7 +7,7 @@ extern const int PRESSURE_PIN;
 extern const int TURBIDITY_90;
 extern const int TURBIDITY_180;
 extern const int PH_PIN;
-
+extern const int 555_TIMER;
 
 WaterSensors::WaterSensors()
 : DataSource("temp,depth,pH,turbidity", "float,float,float,float")
