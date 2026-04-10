@@ -12,7 +12,7 @@ const int PRESSURE_PIN = A3;
 const int TURBIDITY_90 = A0;
 const int TURBIDITY_180 = A1;
 const int PH_PIN = A11;
-const int 555_TIMER = A2;
+const int TIMER = A2;
 
 // --- GLOBAL OBJECTS ---
 WaterSensors sensors;
