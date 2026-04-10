@@ -9,6 +9,7 @@ extern const int PRESSURE_PIN;
 extern const int TURBIDITY_90;
 extern const int TURBIDITY_180;
 extern const int PH_PIN;
+extern const int 555_TIMER;
 
 
 class WaterSensors : public DataSource {
@@ -36,6 +37,7 @@ public:
   float phVoltage;
   float turbidity_90Voltage;
   float turbidity_180Voltage;
+  float 555_Timer_Voltage;
 
 private:
   void updateTemperature();
@@ -43,6 +45,7 @@ private:
   void updatePH();
   void updateTurbidity_90();
   void updateTurbidity_180();
+  void update555_Timer();
 };
 
 #endif
