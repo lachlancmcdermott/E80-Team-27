@@ -4,8 +4,10 @@
 // IMPORTANT: use extern to access pins from main
 extern const int TEMP;
 extern const int PRESSURE_PIN;
+extern const int TURBIDITY_90;
+extern const int TURBIDITY_180;
 extern const int PH_PIN;
-extern const int TURBIDITY_PIN;
+
 
 WaterSensors::WaterSensors()
 : DataSource("temp,depth,pH,turbidity", "float,float,float,float")
@@ -19,34 +21,41 @@ void WaterSensors::update() {
   updateTemperature();
   updateDepth();
   updatePH();
-  updateTurbidity();
+  updateTurbidity_90();
+  updateTurbidity_180();
 }
 
 void WaterSensors::updateTemperature() {
   tempVoltage = analogRead(TEMP) * (3.3 / 1023.0);
-  temp = 1.18 * tempVoltage + 1.36;
+  temp = -4.95 * tempVoltage + 28.4;
 }
 
 void WaterSensors::updateDepth() {
   pressureVoltage = analogRead(PRESSURE_PIN) * (3.3 / 1023.0);
-  depth = 1.18 * pressureVoltage + 1.36;
+  depth = -0.848 * pressureVoltage + 2.6;
 }
 
 void WaterSensors::updatePH() {
   phVoltage = analogRead(PH_PIN) * (3.3 / 1023.0);
-  pH_value = -5.7 * phVoltage + 21.34;
+  pH_value = 1.23 * phVoltage + 6.37;
 }
 
-void WaterSensors::updateTurbidity() {
-  turbidityVoltage = analogRead(TURBIDITY_PIN) * (3.3 / 1023.0);
-  turbidity = -1120.4 * turbidityVoltage + 5742.3;
+void WaterSensors::updateTurbidity_90() {
+  turbidity_90Voltage = analogRead(TURBIDITY_90) * (3.3 / 1023.0);
+  turbidity_90 = -1120.4 * turbidity_90Voltage + 5742.3;
+}
+
+void WaterSensors::updateTurbidity_180() {
+  turbidity_180Voltage = analogRead(TURBIDITY_180)*(3.3 / 1023.0);
+  turbidity_180 = -1120.4 * turbidity_180Voltage + 5742.3;
 }
 
 size_t WaterSensors::writeDataBytes(unsigned char * buffer, size_t idx) {
   memcpy(&buffer[idx], &temp, sizeof(float)); idx += sizeof(float);
   memcpy(&buffer[idx], &depth, sizeof(float)); idx += sizeof(float);
   memcpy(&buffer[idx], &pH_value, sizeof(float)); idx += sizeof(float);
-  memcpy(&buffer[idx], &turbidity, sizeof(float)); idx += sizeof(float);
+  memcpy(&buffer[idx], &turbidity_90, sizeof(float)); idx += sizeof(float);
+  memcpy(&buffer[idx], &turbidity_180, sizeof(float)); idx += sizeof(float);
   return idx;
 }
 
@@ -59,6 +68,7 @@ String WaterSensors::printState() {
     return s;
 }
 String WaterSensors::printState2() {
-    String s = "V_Turb:" + String(turbidityVoltage, 3) + " Turb:" + String(turbidity, 2);
+    String s = "V_Turb_90:" + String(turbidity_90Voltage, 3) + " Turb_90:" + String(turbidity_90, 2);
+    s += "V_Turb_180:" + String(turbidity_180Voltage, 3) + " Turb_180:" + String(turbidity_180, 2);
     return s;
 }
