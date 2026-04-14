@@ -75,7 +75,11 @@ String WaterSensors::printState() {
 }
 String WaterSensors::printState2() {
     String s = "V_Turb_90:" + String(turbidity_90Voltage, 3) + " Turb_90:" + String(turbidity_90, 2);
-    s += "V_Turb_180:" + String(turbidity_180Voltage, 3) + " Turb_180:" + String(turbidity_180, 2);
-    s += "555 TImer Voltage:" + String(Timer_Voltage, 3);
+    s += " V_Turb_180:" + String(turbidity_180Voltage, 3) + " Turb_180:" + String(turbidity_180, 2);
+    return s;
+}
+
+String WaterSensors::printState3() {
+    String s = "555 Timer Voltage:" + String(Timer_Voltage, 3);
     return s;
 }

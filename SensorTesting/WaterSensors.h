@@ -23,6 +23,7 @@ public:
 
   String printState();
   String printState2();
+  String printState3();
 
   // sensor values
   float temp;

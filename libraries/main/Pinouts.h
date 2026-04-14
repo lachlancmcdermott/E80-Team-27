@@ -38,7 +38,5 @@
 #define SPEAKER_PIN 20
 #define MIC_PIN 23
 
-// Depth Control
-#define PRESSURE_PIN 14 // Teensy pin A00
 
 #endif

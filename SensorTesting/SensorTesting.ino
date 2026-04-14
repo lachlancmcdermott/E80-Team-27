@@ -96,9 +96,10 @@ void loop() {
   // ---- PRINTING ----
   printer.printValue(0, sensors.printState());
   printer.printValue(1, sensors.printState2());
-  printer.printValue(2, logger.printState());
-  printer.printValue(3, "Depth: " + String(sensors.depth));
-  printer.printValue(4, "uV: " + String(depth_control.uV));
+  printer.printValue(2, sensors.printState3());
+  printer.printValue(3, logger.printState());
+  printer.printValue(4, "Depth: " + String(sensors.depth));
+  printer.printValue(5, "uV: " + String(depth_control.uV));
   printer.printToSerial();
 
   // ---- LOGGING ----
