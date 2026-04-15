@@ -10,7 +10,7 @@ extern const int PH_PIN;
 extern const int TIMER;
 
 WaterSensors::WaterSensors()
-: DataSource("temp,depth,pH_Value,turbidity_90,turbidity_180,timer, turbidity_90Voltage, turbidity_180Voltage", "float,float,float,float,float,float,float,float")
+: DataSource("temp,depth,pH_Value,turbidity_90,turbidity_180,timer,turbidity_90Voltage,turbidity_180Voltage,tempVoltage,pressureVoltage,phVoltage"", "float,float,float,float,float,float,float,float, float, float, float")
 {}
 
 void WaterSensors::init() {
@@ -64,6 +64,9 @@ size_t WaterSensors::writeDataBytes(unsigned char * buffer, size_t idx) {
   memcpy(&buffer[idx], &Timer_Voltage, sizeof(float)); idx += sizeof(float);
   memcpy(&buffer[idx], &turbidity_90Voltage, sizeof(float)); idx += sizeof(float);
   memcpy(&buffer[idx], &turbidity_180Voltage, sizeof(float)); idx += sizeof(float);
+  memcpy(&buffer[idx], &tempVoltage, sizeof(float));       idx += sizeof(float);
+  memcpy(&buffer[idx], &pressureVoltage, sizeof(float));   idx += sizeof(float);
+  memcpy(&buffer[idx], &phVoltage, sizeof(float));         idx += sizeof(float);
   return idx;
 }
 
@@ -75,6 +78,7 @@ String WaterSensors::printState() {
 
     return s;
 }
+
 String WaterSensors::printState2() {
     String s = "V_Turb_90:" + String(turbidity_90Voltage, 3) + " Turb_90:" + String(turbidity_90, 2);
     s += " V_Turb_180:" + String(turbidity_180Voltage, 3) + " Turb_180:" + String(turbidity_180, 2);

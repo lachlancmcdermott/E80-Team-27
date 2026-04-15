@@ -3,8 +3,8 @@
 clear; clc;
 
 %% --- USER SETTINGS ---
-filenum = '112';   % Change this to the file number you want
-dt = 0.2;          % Logging loop period in seconds
+filenum = '116';   % Change this to the file number you want
+dt = 0.05;          % Logging loop period in seconds
 
 %% --- FILE NAMES ---
 infofile = strcat('INF', filenum, '.TXT');
@@ -112,6 +112,69 @@ end
 xlabel('Time (s)');
 ylabel('555 Timer');
 title('555 Timer vs Time');
+
+%% --- PLOT 3: Voltage vs Computed Value (Calibration Curves) ---
+figure('Name','Voltage vs Computed Value');
+
+% Depth: pressureVoltage vs depth
+subplot(3,2,1);
+if isfield(dataStruct,'pressureVoltage') && isfield(dataStruct,'depth')
+    x = dataStruct.pressureVoltage; y = dataStruct.depth;
+    scatter(x, y, 5, 'b', 'filled'); hold on;
+    p = polyfit(x, y, 1);
+    plot(sort(x), polyval(p, sort(x)), 'r-', 'LineWidth', 2);
+    legend('Data', sprintf('y = %.3fx + %.3f', p(1), p(2)));
+    xlabel('Pressure Voltage (V)'); ylabel('Depth (m)');
+    title('Pressure Voltage vs Depth'); grid on;
+end
+
+% Temperature: tempVoltage vs temp
+subplot(3,2,2);
+if isfield(dataStruct,'tempVoltage') && isfield(dataStruct,'temp')
+    x = dataStruct.tempVoltage; y = dataStruct.temp;
+    scatter(x, y, 5, 'm', 'filled'); hold on;
+    p = polyfit(x, y, 1);
+    plot(sort(x), polyval(p, sort(x)), 'r-', 'LineWidth', 2);
+    legend('Data', sprintf('y = %.3fx + %.3f', p(1), p(2)));
+    xlabel('Temp Voltage (V)'); ylabel('Temperature (°C)');
+    title('Temp Voltage vs Temperature'); grid on;
+end
+
+% pH: phVoltage vs pH_Value
+subplot(3,2,3);
+if isfield(dataStruct,'phVoltage') && isfield(dataStruct,'pH_Value')
+    x = dataStruct.phVoltage; y = dataStruct.pH_Value;
+    scatter(x, y, 5, 'g', 'filled'); hold on;
+    p = polyfit(x, y, 1);
+    plot(sort(x), polyval(p, sort(x)), 'r-', 'LineWidth', 2);
+    legend('Data', sprintf('y = %.3fx + %.3f', p(1), p(2)));
+    xlabel('pH Voltage (V)'); ylabel('pH');
+    title('pH Voltage vs pH'); grid on;
+end
+
+% Turbidity 90
+subplot(3,2,4);
+if isfield(dataStruct,'turbidity_90Voltage') && isfield(dataStruct,'turbidity_90')
+    x = dataStruct.turbidity_90Voltage; y = dataStruct.turbidity_90;
+    scatter(x, y, 5, 'c', 'filled'); hold on;
+    p = polyfit(x, y, 1);
+    plot(sort(x), polyval(p, sort(x)), 'r-', 'LineWidth', 2);
+    legend('Data', sprintf('y = %.3fx + %.3f', p(1), p(2)));
+    xlabel('Turbidity 90° Voltage (V)'); ylabel('Turbidity (NTU)');
+    title('Turbidity 90° Voltage vs NTU'); grid on;
+end
+
+% Turbidity 180
+subplot(3,2,5);
+if isfield(dataStruct,'turbidity_180Voltage') && isfield(dataStruct,'turbidity_180')
+    x = dataStruct.turbidity_180Voltage; y = dataStruct.turbidity_180;
+    scatter(x, y, 5, 'r', 'filled'); hold on;
+    p = polyfit(x, y, 1);
+    plot(sort(x), polyval(p, sort(x)), 'r-', 'LineWidth', 2);
+    legend('Data', sprintf('y = %.3fx + %.3f', p(1), p(2)));
+    xlabel('Turbidity 180° Voltage (V)'); ylabel('Turbidity (NTU)');
+    title('Turbidity 180° Voltage vs NTU'); grid on;
+end
 
 % Optional: adjust figure size for clarity
 set(gcf,'Position',[100 100 600 900]);
