@@ -34,6 +34,7 @@ unsigned long currentTime = 0;
 // ================= SETUP =================
 void setup() {
   Serial.begin(9600);
+  delay(60000);
   analogReadResolution(10);
 
   printer.init();
@@ -80,7 +81,7 @@ void loop() {
       depth_control.surfaceState = true;
     }
 
-    motor_driver.drive(0, 0, depth_control.uV);
+    motor_driver.drive(0, 0, -depth_control.uV);
   }
 
   if (depth_control.surfaceState) {
@@ -90,7 +91,7 @@ void loop() {
       delete[] depth_control.wayPoints;
     }
 
-    motor_driver.drive(0, 0, depth_control.uV);
+    motor_driver.drive(0, 0, -depth_control.uV);
   }
 
   // ---- PRINTING ----

@@ -3,7 +3,7 @@
 clear; clc;
 
 %% --- USER SETTINGS ---
-filenum = '107';   % Change this to the file number you want
+filenum = '112';   % Change this to the file number you want
 dt = 0.2;          % Logging loop period in seconds
 
 %% --- FILE NAMES ---
@@ -79,8 +79,8 @@ title('Temperature vs Time');
 
 % pH
 subplot(6,1,3);
-if isfield(dataStruct,'pH')
-    plot(t, dataStruct.pH, 'g', 'LineWidth', 1.5);
+if isfield(dataStruct,'pH_Value')
+    plot(t, dataStruct.pH_Value, 'g', 'LineWidth', 1.5);
 end
 xlabel('Time (s)');
 ylabel('pH');

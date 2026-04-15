@@ -10,7 +10,7 @@ extern const int PH_PIN;
 extern const int TIMER;
 
 WaterSensors::WaterSensors()
-: DataSource("temp,depth,pH_Value,turbidity_90,turbidity_180,timer", "float,float,float,float,float,float")
+: DataSource("temp,depth,pH_Value,turbidity_90,turbidity_180,timer, turbidity_90Voltage, turbidity_180Voltage", "float,float,float,float,float,float,float,float")
 {}
 
 void WaterSensors::init() {
@@ -62,6 +62,8 @@ size_t WaterSensors::writeDataBytes(unsigned char * buffer, size_t idx) {
   memcpy(&buffer[idx], &turbidity_90, sizeof(float)); idx += sizeof(float);
   memcpy(&buffer[idx], &turbidity_180, sizeof(float)); idx += sizeof(float);
   memcpy(&buffer[idx], &Timer_Voltage, sizeof(float)); idx += sizeof(float);
+  memcpy(&buffer[idx], &turbidity_90Voltage, sizeof(float)); idx += sizeof(float);
+  memcpy(&buffer[idx], &turbidity_180Voltage, sizeof(float)); idx += sizeof(float);
   return idx;
 }
 
