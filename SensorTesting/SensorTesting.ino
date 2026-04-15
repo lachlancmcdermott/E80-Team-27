@@ -43,7 +43,7 @@ void setup() {
   z_state_estimator.init();
 
   // --- Depth waypoints (same as original E80) ---
-  int diveDelay = 0;
+  int diveDelay = 60000;
   const int num_depth_waypoints = 4;
   double depth_waypoints[] = {0.5, 1, 1.5, 2};
 
