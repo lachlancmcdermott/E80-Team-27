@@ -45,15 +45,15 @@ void setup() {
 
   // --- Depth waypoints (same as original E80) ---
   int diveDelay = 60000;
-  const int num_depth_waypoints = 4;
-  double depth_waypoints[] = {0.5, 1, 1.5, 2};
+  const int num_depth_waypoints = 6;
+  double depth_waypoints[] = {0, 0.5, 1, 1.5, 2, 0};
 
   depth_control.init(num_depth_waypoints, depth_waypoints, diveDelay);
 
   // Logging
   logger.include(&sensors);
-  logger.include(&depth_control);
-  logger.include(&motor_driver);
+  // logger.include(&depth_control);
+  // logger.include(&motor_driver);
   logger.init();
 
   Serial.println("Hybrid Sensor + DepthControl Started");
@@ -67,30 +67,26 @@ void loop() {
   sensors.update();
 
   // ---- INJECT DEPTH INTO ESTIMATOR ----
-  // IMPORTANT: may need sign flip (see below)
   z_state_estimator.state.z = sensors.depth;
 
+  //COMMENT OUT THIS SECTION IF YOU DONT WANT PID
   // ---- DEPTH CONTROL STATE MACHINE ----
   if (depth_control.diveState) {
     depth_control.complete = false;
-
     if (!depth_control.atDepth) {
       depth_control.dive(&z_state_estimator.state, currentTime);
     } else {
       depth_control.diveState = false;
       depth_control.surfaceState = true;
     }
-
     motor_driver.drive(0, 0, -depth_control.uV);
   }
-
   if (depth_control.surfaceState) {
     if (!depth_control.atSurface) {
       depth_control.surface(&z_state_estimator.state);
     } else if (depth_control.complete) {
       delete[] depth_control.wayPoints;
     }
-
     motor_driver.drive(0, 0, -depth_control.uV);
   }
 

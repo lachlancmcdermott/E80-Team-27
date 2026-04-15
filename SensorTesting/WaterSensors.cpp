@@ -10,7 +10,7 @@ extern const int PH_PIN;
 extern const int TIMER;
 
 WaterSensors::WaterSensors()
-: DataSource("temp,depth,pH_Value,turbidity_90,turbidity_180,timer,turbidity_90Voltage,turbidity_180Voltage,tempVoltage,pressureVoltage,phVoltage"", "float,float,float,float,float,float,float,float, float, float, float")
+: DataSource("temp,depth,pH_Value,turbidity_90,turbidity_180,timer,turbidity_90Voltage,turbidity_180Voltage,tempVoltage,pressureVoltage,phVoltage", "float,float,float,float,float,float,float,float, float, float, float")
 {}
 
 void WaterSensors::init() {

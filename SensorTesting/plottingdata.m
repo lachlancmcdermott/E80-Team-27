@@ -1,9 +1,11 @@
 %% logreader_plot.m
 % Reads Teensy log files and plots depth, temperature, pH, and turbidity
-clear; clc;
+clear; 
+clc;
+clf;
 
 %% --- USER SETTINGS ---
-filenum = '116';   % Change this to the file number you want
+filenum = '134';   % Change this to the file number you want
 dt = 0.05;          % Logging loop period in seconds
 
 %% --- FILE NAMES ---
@@ -176,5 +178,13 @@ if isfield(dataStruct,'turbidity_180Voltage') && isfield(dataStruct,'turbidity_1
     title('Turbidity 180° Voltage vs NTU'); grid on;
 end
 
-% Optional: adjust figure size for clarity
-set(gcf,'Position',[100 100 600 900]);
+subplot(3,2,6);
+if isfield(dataStruct,'pressureVoltage') && isfield(dataStruct,'depth')
+    x = dataStruct.pressureVoltage; y = dataStruct.depth;
+    scatter(x, y, 5, 'b', 'filled'); hold on;
+    p = polyfit(x, y, 1);
+    plot(sort(x), polyval(p, sort(x)), 'r-', 'LineWidth', 2);
+    legend('Data', sprintf('y = %.3fx + %.3f', p(1), p(2)));
+    xlabel('Pressure Voltage (V)'); ylabel('Depth (m)');
+    title('Pressure Voltage vs Depth'); grid on;
+end
