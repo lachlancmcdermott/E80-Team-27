@@ -24,18 +24,19 @@ float turbidity_180Voltage, turbidity_180;
 float Timer_Voltage;
 
 // --- DEPTH CONTROL CONSTANTS ---
-#define DEPTH_MARGIN 0.1
-#define Kp 50.0
-#define hoverTime 5000
-#define motorOffTime 3000
+#define DEPTH_MARGIN 0.05
+#define Kp 80.0
+#define hoverTime 40000
+#define motorOffTime 10000
 
 // --- DEPTH CONTROL STATE ---
 enum WPState { TRAVELING, HOVERING, MOTOR_OFF };
 
-double* wayPoints;
+
 int totalWayPoints = 3;
 int currentWayPoint = 0;
 double depth_waypoints[] = {1, 2, 0};
+double* wayPoints = depth_waypoints;
 
 float uV = 0;
 float depth_des = 0;
@@ -55,8 +56,8 @@ unsigned long currentTime = 0;
 class SensorData : public DataSource {
 public:
   SensorData()
-  : DataSource("temp,depth,pH_Value,turbidity_90,turbidity_180,timer,turbidity_90Voltage,turbidity_180Voltage,tempVoltage,pressureVoltage,phVoltage,depth_des",
-               "float,float,float,float,float,float,float,float,float,float,float,float") {}
+  : DataSource("temp,depth,pH_Value,turbidity_90,turbidity_180,timer,turbidity_90Voltage,turbidity_180Voltage,tempVoltage,pressureVoltage,phVoltage,depth_des,uV",
+               "float,float,float,float,float,float,float,float,float,float,float,float,float") {}
 
   size_t writeDataBytes(unsigned char * buffer, size_t idx) {
     memcpy(&buffer[idx], &temp, sizeof(float));                idx += sizeof(float);
@@ -71,6 +72,7 @@ public:
     memcpy(&buffer[idx], &pressureVoltage, sizeof(float));     idx += sizeof(float);
     memcpy(&buffer[idx], &phVoltage, sizeof(float));           idx += sizeof(float);
     memcpy(&buffer[idx], &depth_des, sizeof(float));           idx += sizeof(float);
+    memcpy(&buffer[idx], &uV, sizeof(float));           idx += sizeof(float);
     return idx;
   }
 };
@@ -130,6 +132,11 @@ String printState3() {
 
 // --- DEPTH CONTROL FUNCTIONS ---
 void dive() {
+    if (currentWayPoint >= totalWayPoints) {
+    atDepth = true;
+    uV = 0;
+    return;
+    }
   depth_des = wayPoints[currentWayPoint];
   depth_error = depth_des - depth;
 
@@ -192,10 +199,7 @@ void setup() {
   printer.init();
   motor_driver.init();
 
-  wayPoints = new double[totalWayPoints];
-  for (int i = 0; i < totalWayPoints; i++) {
-    wayPoints[i] = depth_waypoints[i];
-  }
+  
 
   logger.include(&sensorData);
   logger.init();
@@ -228,18 +232,15 @@ void loop() {
     motor_driver.drive(0, 0, -uV);
   }
 
-  bool memoryFreed = false;
+
   if (surfaceState) {
     if (!atSurface) {
-        surface();
-    } else if (complete && !memoryFreed) {
-        delete[] wayPoints;
-        wayPoints = nullptr;   // Prevent any accidental double-free
-        memoryFreed = true;
+      surface();
+      motor_driver.drive(0, 0, -uV);
+    } else {
+      motor_driver.drive(0, 0, 0);  // stop motors
     }
-    motor_driver.drive(0, 0, -uV);
   }
-
 
   // ---- PRINTING ----
   printer.printValue(0, printState());
