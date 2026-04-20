@@ -34,7 +34,7 @@ unsigned long currentTime = 0;
 // ================= SETUP =================
 void setup() {
   Serial.begin(9600);
-  delay(60000);
+  delay(30000);
   analogReadResolution(10);
 
   printer.init();
@@ -43,10 +43,10 @@ void setup() {
   motor_driver.init();
   z_state_estimator.init();
 
-  // --- Depth waypoints (same as original E80) ---
-  int diveDelay = 60000;
-  const int num_depth_waypoints = 4;
-  double depth_waypoints[] = {0.5, 1, 1.5, 2};
+  //--- Depth waypoints (same as original E80) ---
+  int diveDelay = 0000;
+  const int num_depth_waypoints = 3;
+  double depth_waypoints[] = {1, 2, 0};
 
   depth_control.init(num_depth_waypoints, depth_waypoints, diveDelay);
 
@@ -66,11 +66,11 @@ void loop() {
   // ---- UPDATE SENSORS ----
   sensors.update();
 
-  // ---- INJECT DEPTH INTO ESTIMATOR ----
+  //---- INJECT DEPTH INTO ESTIMATOR ----
   z_state_estimator.state.z = sensors.depth;
 
   //COMMENT OUT THIS SECTION IF YOU DONT WANT PID
-  // ---- DEPTH CONTROL STATE MACHINE ----
+  //---- DEPTH CONTROL STATE MACHINE ----
   if (depth_control.diveState) {
     depth_control.complete = false;
     if (!depth_control.atDepth) {

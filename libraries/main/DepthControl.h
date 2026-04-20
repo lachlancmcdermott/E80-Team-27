@@ -47,6 +47,21 @@ public:
   int totalWayPoints;
   double * wayPoints;
 
+  // adding variables for traveling or hovering
+
+  enum WPState {
+    TRAVELING,
+    HOVERING,
+    MOTOR_OFF
+  };
+  
+  WPState wpstate = TRAVELING;
+
+  int stateStartTime = 0;
+
+  const int hoverTime = 40000; // 40 sec [ms]
+  const int motorOffTime = 10000; // 10 sec [ms]
+
 private:
 
   // updates current waypoint if necessary

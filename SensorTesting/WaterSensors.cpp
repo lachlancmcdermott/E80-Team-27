@@ -33,7 +33,7 @@ void WaterSensors::updateTemperature() {
 
 void WaterSensors::updateDepth() {
   pressureVoltage = analogRead(PRESSURE_PIN) * (3.3 / 1023.0);
-  depth = -0.848 * pressureVoltage + 2.6;
+  depth = -0.848 * pressureVoltage + 2.51;
 }
 
 void WaterSensors::updatePH() {

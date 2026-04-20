@@ -20,8 +20,9 @@ void DepthControl::init(const int totalWayPoints_in, double * wayPoints_in, int 
 void DepthControl::dive(z_state_t * state, int currentTime_in) {
   currentTime = currentTime_in;
 
-  updatePoint(state->z);
-  if (atDepth || currentWayPoint == totalWayPoints) return; // at final depth point
+  //updatePoint(state->z);
+  //if (atDepth || currentWayPoint == totalWayPoints) 
+  //return; // at final depth point
 
   // Set the value of depth_des, depth, vertical control effort (uV) appropriately for P control
   // You can access the desired depth from the wayPoints array at the index held in currentWayPoint
@@ -31,9 +32,51 @@ void DepthControl::dive(z_state_t * state, int currentTime_in) {
   depth_des = wayPoints[currentWayPoint];
   depth = state->z;
   depth_error = depth_des - depth;
-  uV = Kp * depth_error;
-  if (uV > 200) uV = 200;
-  else if (uV < -200) uV = -200;
+
+  // check to see if we hit the waypoint
+  bool atWaypoint = abs(depth_error) < DEPTH_MARGIN;
+  switch (wpstate) {
+    case TRAVELING:
+      // Normal P control to reach waypoint
+      uV = Kp * depth_error;
+      if (uV > 200) uV = 200;
+      else if (uV < -200) uV = -200;
+      if (atWaypoint) {
+        wpstate = HOVERING;
+        stateStartTime = currentTime;
+      }
+      break;
+    
+    case HOVERING:
+      // Keep holding depth (while still using control)
+      uV = Kp*depth_error;
+      if (uV > 200) uV = 200;
+      else if (uV < -200) uV = -200;
+
+      if (currentTime - stateStartTime >= hoverTime) {
+        wpstate = MOTOR_OFF;
+        stateStartTime = currentTime;
+      }
+      break;
+    
+      case MOTOR_OFF:
+        // shut off motors
+        uV = 0;
+
+        if (currentTime - stateStartTime >= motorOffTime) {
+          wpstate = TRAVELING;
+          currentWayPoint++; // move to next waypoint
+        }
+        break;
+  }
+
+  if (currentWayPoint >= totalWayPoints) {
+    atDepth = 1;
+    uV = 0;
+    return;
+  }
+
+
   //////////////////////////////////////////////////////////////////////
   
   ///////////////////////////////////////////////////////////////////////
