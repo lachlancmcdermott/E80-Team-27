@@ -35,8 +35,8 @@ enum WPState { TRAVELING, HOVERING, MOTOR_OFF };
 
 int totalWayPoints = 3;
 int currentWayPoint = 0;
-double depth_waypoints[] = {1, 2, 0};
-double* wayPoints = depth_waypoints;
+float depth_waypoints[] = {1, 2, 0};
+float* wayPoints = depth_waypoints;
 
 float uV = 0;
 float depth_des = 0;
