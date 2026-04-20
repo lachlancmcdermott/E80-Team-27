@@ -227,14 +227,19 @@ void loop() {
     }
     motor_driver.drive(0, 0, -uV);
   }
+
+  bool memoryFreed = false;
   if (surfaceState) {
     if (!atSurface) {
-      surface();
-    } else if (complete) {
-      delete[] wayPoints;
+        surface();
+    } else if (complete && !memoryFreed) {
+        delete[] wayPoints;
+        wayPoints = nullptr;   // Prevent any accidental double-free
+        memoryFreed = true;
     }
     motor_driver.drive(0, 0, -uV);
   }
+
 
   // ---- PRINTING ----
   printer.printValue(0, printState());
