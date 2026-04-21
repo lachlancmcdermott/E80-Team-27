@@ -33,9 +33,9 @@ float Timer_Voltage;
 enum WPState { TRAVELING, HOVERING, MOTOR_OFF };
 
 
-int totalWayPoints = 3;
+int totalWayPoints = 4;
 int currentWayPoint = 0;
-float depth_waypoints[] = {1, 2, 0};
+float depth_waypoints[] = {0.5, 1, 2, 0};
 float* wayPoints = depth_waypoints;
 
 float uV = 0;
@@ -193,6 +193,9 @@ void surface() {
 // ================= SETUP =================
 void setup() {
   Serial.begin(9600);
+  
+  motor_driver.init();        // move this UP
+  motor_driver.drive(0,0,0);  // explicitly zero the motors immediately
   delay(30000);
   analogReadResolution(10);
 
