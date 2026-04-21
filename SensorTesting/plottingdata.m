@@ -5,7 +5,7 @@ clc;
 clf;
 
 %% --- USER SETTINGS ---
-filenum = '134';   % Change this to the file number you want
+filenum = '169';   % Change this to the file number you want
 dt = 0.05;          % Logging loop period in seconds
 
 %% --- FILE NAMES ---
@@ -64,7 +64,10 @@ figure;
 % Depth
 subplot(6,1,1);
 if isfield(dataStruct,'depth')
+    hold on;
     plot(t, dataStruct.depth, 'b', 'LineWidth', 1.5);
+    plot(t, dataStruct.depth_des, 'r', 'LineWidth', 1.5);
+    legend('depth', 'depth desired')
 end
 xlabel('Time (s)');
 ylabel('Depth (m)');

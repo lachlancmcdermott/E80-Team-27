@@ -25,9 +25,9 @@ float Timer_Voltage;
 
 // --- DEPTH CONTROL CONSTANTS ---
 #define DEPTH_MARGIN 0.05
-#define Kp 80.0
+#define Kp 120
 #define hoverTime 40000
-#define motorOffTime 10000
+#define motorOffTime 5000
 
 // --- DEPTH CONTROL STATE ---
 enum WPState { TRAVELING, HOVERING, MOTOR_OFF };
@@ -35,7 +35,7 @@ enum WPState { TRAVELING, HOVERING, MOTOR_OFF };
 
 int totalWayPoints = 4;
 int currentWayPoint = 0;
-float depth_waypoints[] = {0.5, 1, 2, 0};
+float depth_waypoints[] = {0.5, 1, 1.5, 0};
 float* wayPoints = depth_waypoints;
 
 float uV = 0;
