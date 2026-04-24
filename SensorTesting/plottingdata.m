@@ -191,3 +191,22 @@ if isfield(dataStruct,'pressureVoltage') && isfield(dataStruct,'depth')
     xlabel('Pressure Voltage (V)'); ylabel('Depth (m)');
     title('Pressure Voltage vs Depth'); grid on;
 end
+
+% Turbidity
+figure;
+subplot(2,1,1);
+if isfield(dataStruct,'turbidity_90Voltage')
+    plot(t, dataStruct.turbidity_90Voltage, 'c', 'LineWidth', 1.5);
+end
+xlabel('Time (s)');
+ylabel('Turbidity 90 Voltage (V)');
+title('Turbidity 90 vs Time');
+
+% Turbidity
+subplot(2,1,2);
+if isfield(dataStruct,'turbidity_180Voltage')
+    plot(t, dataStruct.turbidity_180Voltage, 'c', 'LineWidth', 1.5);
+end
+xlabel('Time (s)');
+ylabel('Turbidity 180 Voltage (V)');
+title('Turbidity 180 vs Time');
