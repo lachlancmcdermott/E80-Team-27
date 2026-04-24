@@ -76,6 +76,8 @@ title('Depth vs Time');
 % Temperature / Thermistor
 subplot(6,1,2);
 if isfield(dataStruct,'temp')
+    hold on;
+    plot(t, dataStruct.uV, 'g', 'LineWidth', 1.5);
     plot(t, dataStruct.temp, 'm', 'LineWidth', 1.5);
 end
 xlabel('Time (s)');
@@ -200,7 +202,7 @@ if isfield(dataStruct,'turbidity_90Voltage')
 end
 xlabel('Time (s)');
 ylabel('Turbidity 90 Voltage (V)');
-title('Turbidity 90 vs Time');
+title('Turbidity 90 Voltage vs Time');
 
 % Turbidity
 subplot(2,1,2);
@@ -209,4 +211,4 @@ if isfield(dataStruct,'turbidity_180Voltage')
 end
 xlabel('Time (s)');
 ylabel('Turbidity 180 Voltage (V)');
-title('Turbidity 180 vs Time');
+title('Turbidity 180 Voltage vs Time');
