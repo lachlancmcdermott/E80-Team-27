@@ -1,0 +1,2 @@
+temp,depth,pH_Value,turbidity_90,turbidity_180,timer,turbidity_90Voltage,turbidity_180Voltage,tempVoltage,pressureVoltage,phVoltage,depth_des,uV
+float,float,float,float,float,float,float,float,float,float,float,float,float
